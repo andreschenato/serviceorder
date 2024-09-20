@@ -1,0 +1,16 @@
+import 'package:flutter/material.dart';
+import 'package:serviceorder/view/tela_cadastro.dart';
+import 'package:serviceorder/view/tela_clientes.dart';
+import 'package:serviceorder/view/tela_login.dart';
+
+class Rotas {
+  static const String login = '/login';
+  static const String cadastro = '/cadastro';
+  static const String clientes = '/cliente';
+}
+
+var rotas = <String, WidgetBuilder> {
+  Rotas.login: (ctx) => const TelaLogin(),
+  Rotas.cadastro: (ctx) => const TelaCadastro(),
+  Rotas.clientes: (ctx) => const TelaClientes(),
+};
