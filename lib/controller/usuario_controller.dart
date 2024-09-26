@@ -17,6 +17,12 @@ Future<void> storeLogin(Usuario user) async {
   await storage.write(key: 'senha', value: user.senha);
 }
 
+Future<void> fazLogout() async {
+  await storage.delete(key: 'userName');
+  await storage.delete(key: 'email');
+  await storage.delete(key: 'senha');
+}
+
 Future criaUser(Usuario user, bool keepLogin) async {
   try {
     var conn = await MySqlDBConfiguration().connection;

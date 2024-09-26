@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 
 class CustomButton {
-  static ElevatedButton botao({
+  static ListTile botao({
     String txt = "",
     IconData? icon,
     VoidCallback? action,
+    bool selectedItem = false,
   }) {
-    return ElevatedButton(
-      style: const ButtonStyle(
-          backgroundColor: WidgetStatePropertyAll(Colors.transparent),
-          shadowColor: WidgetStatePropertyAll(Colors.transparent),
-          overlayColor: WidgetStatePropertyAll(Color.fromARGB(50, 59, 40, 204)),
-          foregroundColor: WidgetStatePropertyAll(Colors.black)),
-      onPressed: action,
-      child: Row(
+    return ListTile(
+      selected: selectedItem,
+      selectedColor: const Color.fromARGB(255, 59, 40, 204),
+      onTap: action,
+      iconColor: Colors.black,
+      title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(

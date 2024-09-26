@@ -9,6 +9,7 @@ class Cliente {
   String? bairro;
   String? enderecoCompleto;
   String? status;
+  String? complemento;
 
   Cliente({
     this.id,
@@ -21,6 +22,7 @@ class Cliente {
     this.bairro,
     this.enderecoCompleto,
     this.status,
+    this.complemento,
   });
 
    factory Cliente.fromJson(Map<String, dynamic> json) {
@@ -35,6 +37,9 @@ class Cliente {
       bairro: json['bairro'],
       enderecoCompleto: json['enderecoCompleto'],
       status: json['status'],
+      complemento: json['complemento'],
     );
   }
+
+  map(Cliente Function(dynamic e) param0) {}
 }
