@@ -7,7 +7,7 @@ import 'package:serviceorder/widgets/drawer_button.dart';
 
 class AppDrawer {
   static Drawer appDrawer({
-    BuildContext? context,
+    required BuildContext context,
     String? tela,
   }) {
     return Drawer(
@@ -44,13 +44,17 @@ class AppDrawer {
                   selectedItem: tela == 'Clientes',
                   icon: Icons.groups_rounded,
                   txt: "Clientes",
-                  action: () {},
+                  action: () {
+                    Navigator.pushNamed(context, Rotas.clientes);
+                  },
                 ),
                 CustomButton.botao(
                   selectedItem: tela == 'Servicos',
                   icon: Icons.handyman_rounded,
                   txt: "Serviços",
-                  action: () {},
+                  action: () {
+                    Navigator.pushNamed(context, Rotas.servicos);
+                  },
                 ),
                 CustomButton.botao(
                   selectedItem: tela == 'Historico',
@@ -69,7 +73,7 @@ class AppDrawer {
               txt: "Sair",
               action: () {
                 fazLogout().then((_) => {
-                      Navigator.of(context!).pushNamedAndRemoveUntil(
+                      Navigator.of(context).pushNamedAndRemoveUntil(
                           Rotas.login, (Route<dynamic> route) => false)
                     });
               },

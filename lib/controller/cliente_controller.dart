@@ -9,7 +9,8 @@ import 'package:serviceorder/view/tela_editar_cliente.dart';
 Future getClientes(String idUser) async {
   var conn = await MySqlDBConfiguration().connection;
   await conn.connect();
-  var clientes = await conn.execute("SELECT * FROM Cliente");
+  var clientes =
+      await conn.execute("SELECT * FROM Cliente WHERE idUsuarioFK = $idUser;");
   var clienteList = clientes.rows.map((row) => row.assoc()).toList();
   await conn.close();
   return jsonEncode(clienteList);
@@ -62,6 +63,9 @@ Future<List<Cliente>> carregarClientes(String idUser) async {
 }
 
 Widget buildClientes(List<Cliente> clientes) {
+  if (clientes.isEmpty) {
+    return const Center(child: Text('Não há clientes'));
+  }
   return ListView.builder(
     itemCount: clientes.length,
     itemBuilder: (context, index) {

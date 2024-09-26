@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:serviceorder/view/tela_cadastro.dart';
 import 'package:serviceorder/view/tela_clientes.dart';
 import 'package:serviceorder/view/tela_cria_cliente.dart';
+import 'package:serviceorder/view/tela_cria_servico.dart';
 import 'package:serviceorder/view/tela_login.dart';
+import 'package:serviceorder/view/tela_servicos.dart';
 
 class Rotas {
   static const String login = '/login';
   static const String cadastro = '/cadastro';
   static const String clientes = '/cliente';
   static const String cadastroClientes = '/cadastroCliente';
+  static const String servicos = '/servicos';
+  static const String cadastroServicos = '/cadastroServico';
 }
 
 var rotas = <String, WidgetBuilder> {
@@ -16,4 +20,6 @@ var rotas = <String, WidgetBuilder> {
   Rotas.cadastro: (ctx) => const TelaCadastro(),
   Rotas.clientes: (ctx) => const TelaClientes(),
   Rotas.cadastroClientes: (ctx) => const TelaCriaCliente(),
+  Rotas.servicos: (ctx) => const TelaServicos(),
+  Rotas.cadastroServicos: (ctx) => const TelaCriaServico(),
 };
