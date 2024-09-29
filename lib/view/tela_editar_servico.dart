@@ -40,7 +40,7 @@ class _TelaEditarServicoState extends State<TelaEditarServico> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar.appBar(txt: 'Serviços'),
-      drawer: AppDrawer.appDrawer(context: context, tela: 'Serviços'),
+      drawer: AppDrawer.appDrawer(context: context, tela: 'Servicos'),
       body: Center(
         child: FutureBuilder(
             future: servico,

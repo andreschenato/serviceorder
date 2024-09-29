@@ -40,6 +40,4 @@ class Cliente {
       complemento: json['complemento'],
     );
   }
-
-  map(Cliente Function(dynamic e) param0) {}
 }

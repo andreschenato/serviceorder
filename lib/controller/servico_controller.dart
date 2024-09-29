@@ -36,6 +36,7 @@ Future<Servico> getDadosServico(int idServico) async {
   var servico =
       await conn.execute("SELECT * FROM Servico WHERE idServico = $idServico;");
   var servicoData = jsonEncode(servico.rows.map((row) => row.assoc()).toList());
+  await conn.close();
   List<dynamic> result = jsonDecode(servicoData);
   Servico svc = result.map((e) => Servico.fromJson(e)).single;
   return svc;

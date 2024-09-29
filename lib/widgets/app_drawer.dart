@@ -38,7 +38,9 @@ class AppDrawer {
                   selectedItem: tela == 'Ordens',
                   icon: Icons.article_rounded,
                   txt: "Ordens de serviço",
-                  action: () {},
+                  action: () {
+                    Navigator.pushNamed(context, Rotas.ordens);
+                  },
                 ),
                 CustomButton.botao(
                   selectedItem: tela == 'Clientes',

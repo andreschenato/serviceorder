@@ -23,6 +23,7 @@ class FormFieldDefault {
         ),
         borderSide: BorderSide.none,
       ),
+      alignLabelWithHint: true,
       filled: true,
       fillColor: const Color.fromARGB(255, 230, 230, 230),
     );

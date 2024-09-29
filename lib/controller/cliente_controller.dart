@@ -17,18 +17,22 @@ Future getClientes(String idUser) async {
 }
 
 Future criaCliente(Cliente cliente, String idUsuario) async {
-  var conn = await MySqlDBConfiguration().connection;
+  try {var conn = await MySqlDBConfiguration().connection;
   await conn.connect();
   await conn.execute("CALL Pc_CriaCliente("
       "'$idUsuario', '${cliente.nome}', "
       "'${cliente.telefonePrincipal}', '${cliente.telefoneSecundario}', '${cliente.email}', "
       "'${cliente.endereco}', '${cliente.numEndereco}', '${cliente.bairro}', '${cliente.complemento}');");
   await conn.close();
+  
   return true;
+  } catch (err) {
+    return false;
+  }
 }
 
 Future atualizaCliente(Cliente cliente) async {
-  var conn = await MySqlDBConfiguration().connection;
+  try {var conn = await MySqlDBConfiguration().connection;
   await conn.connect();
   await conn.execute("CALL Pc_AtualizaCliente("
       "'${cliente.id}', '${cliente.nome}', "
@@ -36,6 +40,9 @@ Future atualizaCliente(Cliente cliente) async {
       "'${cliente.endereco}', '${cliente.numEndereco}', '${cliente.bairro}', '${cliente.complemento}');");
   await conn.close();
   return true;
+  } catch (err) {
+    return false;
+  }
 }
 
 Future<Cliente> getDadosCliente(int idCliente) async {
