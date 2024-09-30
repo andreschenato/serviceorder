@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:serviceorder/database/db_config.dart';
 import 'package:serviceorder/model/historico.dart';
 
@@ -21,6 +22,7 @@ Future<List<Historico>> carregarHistorico(String idUser) async {
 }
 
 Widget buildHistoricos(List<Historico> historicos) {
+  var t = DateFormat("dd/MM/yyyy - HH:mm");
   if (historicos.isEmpty) {
     return const Center(
       child: Text('Não há histórico'),
@@ -43,7 +45,7 @@ Widget buildHistoricos(List<Historico> historicos) {
           title: Text('${historico.statusAnterior} => ${historico.statusNovo}',
             style: const TextStyle(fontWeight: FontWeight.w800),
           ),
-          subtitle: Text('${historico.dataModificacao}'),
+          subtitle: Text(t.format(historico.dataModificacao!.toLocal()).toString()),
         ),
       );
     },
