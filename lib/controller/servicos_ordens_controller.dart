@@ -19,18 +19,22 @@ Future<List<ServicosOrdens>> carregarServicosOrdens(int idOrdem) async {
   return ordens.map((e) => ServicosOrdens.fromJson(e)).toList();
 }
 
-Future deleteServicoOrdem(int idServicosOrdens) async {
+Future deleteServicoOrdem(int idServicosOrdens, int idOrdem) async {
   var conn = await MySqlDBConfiguration().connection;
   await conn.connect();
   await conn.execute("DELETE FROM ServicosOrdem WHERE idServicosOrdem = $idServicosOrdens;");
+  await conn.execute("UPDATE Ordens SET valorTotal = (SELECT fc_CalculaPrecoTotalOrdem($idOrdem)) WHERE idOrdens = $idOrdem;");
   await conn.close();
 }
 
 Future adicionarServicoOrdem(int idSO, int idOrdem) async {
-  var conn = await MySqlDBConfiguration().connection;
+  try{var conn = await MySqlDBConfiguration().connection;
   await conn.connect();
   await conn.execute("CALL sp_AdicionarServicoOrdem("
       "'$idOrdem', '$idSO');");
   await conn.close();
   return true;
+  } catch (err) {
+    return false;
+  }
 }

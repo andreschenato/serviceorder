@@ -9,6 +9,7 @@ class Ordens {
   DateTime? diaCriado;
   String? diaFinalizado;
   String? status;
+  double? valorTotal;
 
   Ordens({
     this.id,
@@ -21,6 +22,7 @@ class Ordens {
     this.diaCriado,
     this.diaFinalizado,
     this.status,
+    this.valorTotal,
   });
 
   factory Ordens.fromJson(Map<String, dynamic> json) {
@@ -33,6 +35,7 @@ class Ordens {
       status: json['status'],
       diaCriado: DateTime.parse(json['dataAbertura']),
       diaFinalizado: json['dataConclusao'],
+      valorTotal: double.parse(json['valorTotal']),
     );
   }
 

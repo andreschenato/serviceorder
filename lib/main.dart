@@ -51,7 +51,7 @@ class ServiceOrder extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Asap'
       ),
-      initialRoute: isLoggedIn ? Rotas.clientes : Rotas.login,
+      initialRoute: isLoggedIn ? Rotas.ordens : Rotas.login,
       routes: rotas,
     );
   }

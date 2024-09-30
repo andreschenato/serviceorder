@@ -1,3 +1,4 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -43,6 +44,14 @@ class _TelaEditarOrdemState extends State<TelaEditarOrdem> {
     super.initState();
   }
 
+  void _atualizarValorTotal(double novoValorTotal) {
+    setState(() {
+      ordem!.then((ord) {
+        ord.valorTotal = novoValorTotal;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var t = DateFormat("dd/MM/yyyy - HH:mm");
@@ -64,8 +73,10 @@ class _TelaEditarOrdemState extends State<TelaEditarOrdem> {
             } else {
               Ordens ord = snapshot.data!;
               descricao.text = ord.descricao!;
-              laudo.text = ord.laudo!;
-              diaConclusao.text = t.format(DateTime.parse(ord.diaFinalizado!));
+              laudo.text = ord.laudo != null ? ord.laudo! : "";
+              diaConclusao.text = ord.diaFinalizado != null
+                  ? t.format(DateTime.parse(ord.diaFinalizado!))
+                  : '';
               return Container(
                 constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.width / 1.2,
@@ -80,8 +91,7 @@ class _TelaEditarOrdemState extends State<TelaEditarOrdem> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Consumer<UserLogado>(
-                            builder: (_, user, __) =>
-                                FutureBuilder(
+                            builder: (_, user, __) => FutureBuilder(
                               future: carregarClientes(user.id!),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
@@ -116,7 +126,8 @@ class _TelaEditarOrdemState extends State<TelaEditarOrdem> {
                                         item.id == ord.clienteId,
                                     showSelectedItems: true,
                                   ),
-                                  compareFn: (Cliente c1, Cliente c2) => c1 == c2,
+                                  compareFn: (Cliente c1, Cliente c2) =>
+                                      c1 == c2,
                                   dropdownBuilder: (context, cliente) {
                                     return Text(cliente != null
                                         ? '${cliente.id} - ${cliente.nome}'
@@ -146,7 +157,8 @@ class _TelaEditarOrdemState extends State<TelaEditarOrdem> {
                             },
                             popupProps: PopupProps.menu(
                               fit: FlexFit.loose,
-                              disabledItemFn: (String item) => item == ord.status,
+                              disabledItemFn: (String item) =>
+                                  item == ord.status,
                             ),
                           ),
                           const SizedBox(
@@ -170,7 +182,7 @@ class _TelaEditarOrdemState extends State<TelaEditarOrdem> {
                                   context: context,
                                   initialTime: TimeOfDay.now(),
                                 );
-                      
+
                                 if (_pickedTime != null) {
                                   final DateTime finalDateTime = DateTime(
                                     _pickedDate.year,
@@ -182,7 +194,8 @@ class _TelaEditarOrdemState extends State<TelaEditarOrdem> {
                                   diaConclusao.text =
                                       t.format(finalDateTime).toString();
                                   setState(() {
-                                    ord.diaFinalizado = sqlT.format(finalDateTime);
+                                    ord.diaFinalizado =
+                                        sqlT.format(finalDateTime);
                                     print(ord.diaFinalizado);
                                   });
                                 }
@@ -203,7 +216,8 @@ class _TelaEditarOrdemState extends State<TelaEditarOrdem> {
                             onChanged: (value) {
                               ord.descricao = descricao.text;
                             },
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Por favor, insira uma descrição para a ordem de serviço!';
@@ -225,18 +239,32 @@ class _TelaEditarOrdemState extends State<TelaEditarOrdem> {
                             onChanged: (value) {
                               ord.laudo = laudo.text;
                             },
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             validator: (value) {
                               return null;
                             },
                           ),
-
                           const SizedBox(
                             height: 25,
                           ),
-
-                          SvcOrd(idOrdem: widget.idOrdem),
-
+                          SvcOrd(idOrdem: widget.idOrdem, atualizarValorTotal: _atualizarValorTotal,),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "Valor total:",
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              Text(
+                                UtilBrasilFields.obterReal(ord.valorTotal!),
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                            ],
+                          ),
                           const SizedBox(
                             height: 25,
                           ),
@@ -272,8 +300,8 @@ class _TelaEditarOrdemState extends State<TelaEditarOrdem> {
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
                                               const SnackBar(
-                                                content:
-                                                    Text('Erro ao criar serviço'),
+                                                content: Text(
+                                                    'Erro ao criar serviço'),
                                               ),
                                             );
                                           }

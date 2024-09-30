@@ -62,7 +62,9 @@ class AppDrawer {
                   selectedItem: tela == 'Historico',
                   icon: Icons.history_rounded,
                   txt: "Histórico",
-                  action: () {},
+                  action: () {
+                    Navigator.pushNamed(context, Rotas.historico);
+                  },
                 ),
               ],
             ),

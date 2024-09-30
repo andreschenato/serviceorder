@@ -11,7 +11,8 @@ import 'package:serviceorder/themes/button_default.dart';
 
 class SvcOrd extends StatefulWidget {
   final int idOrdem;
-  const SvcOrd({super.key, required this.idOrdem});
+  final Function(double) atualizarValorTotal;
+  const SvcOrd({super.key, required this.idOrdem, required this.atualizarValorTotal});
 
   @override
   State<SvcOrd> createState() => _SvcOrdState();
@@ -25,6 +26,12 @@ class _SvcOrdState extends State<SvcOrd> {
   void initState() {
     serviceorder = carregarServicosOrdens(widget.idOrdem);
     super.initState();
+  }
+
+  void _calcularValorTotal(List<ServicosOrdens> servicosOrdens) {
+    double valorTotal = servicosOrdens.fold(
+        0, (sum, item) => sum + (item.preco ?? 0));
+    widget.atualizarValorTotal(valorTotal); 
   }
 
   @override
@@ -59,9 +66,12 @@ class _SvcOrdState extends State<SvcOrd> {
                         },
                         popupProps: const PopupProps.menu(
                             showSearchBox: true,
+                            searchFieldProps: TextFieldProps(
+                              style: TextStyle(fontSize: 12),
+                            ),
                             fit: FlexFit.loose,
                             showSelectedItems: true,
-                            constraints: BoxConstraints(maxHeight: 150)),
+                            constraints: BoxConstraints(maxHeight: 250)),
                         compareFn: (Servico s1, Servico s2) => s1 == s2,
                         dropdownBuilder: (context, servico) {
                           return Text(servico != null
@@ -82,11 +92,19 @@ class _SvcOrdState extends State<SvcOrd> {
                   newServicoOrdem.idServico != null
                       ? adicionarServicoOrdem(
                               newServicoOrdem.idServico!, widget.idOrdem)
-                          .then((_) {
-                          setState(() {
-                            serviceorder =
-                                carregarServicosOrdens(widget.idOrdem);
-                          });
+                          .then((val) {
+                          if (val) {
+                            setState(() {
+                              serviceorder =
+                                  carregarServicosOrdens(widget.idOrdem);
+                                  serviceorder!.then((val) => _calcularValorTotal(val));
+                            });
+                          } else {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text('Você já adicionou este serviço'),
+                            ));
+                          }
                         })
                       : null;
                 },
@@ -143,11 +161,12 @@ class _SvcOrdState extends State<SvcOrd> {
                                       const Color.fromARGB(255, 243, 2, 45),
                                   foregroundColor: Colors.white,
                                   onPressed: (context) {
-                                    deleteServicoOrdem(svcOrd.idServicosOrdens!)
+                                    deleteServicoOrdem(svcOrd.idServicosOrdens!, widget.idOrdem)
                                         .then((_) {
                                       setState(() {
                                         serviceorder = carregarServicosOrdens(
                                             widget.idOrdem);
+                                            serviceorder!.then((val) => _calcularValorTotal(val));
                                       });
                                     });
                                   },
@@ -165,7 +184,7 @@ class _SvcOrdState extends State<SvcOrd> {
                               ),
                               subtitle: Text('R\$ ${svcOrd.preco!.toString()}'),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     );
