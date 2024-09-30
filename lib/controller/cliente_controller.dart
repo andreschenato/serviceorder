@@ -5,6 +5,7 @@ import 'package:serviceorder/database/db_config.dart';
 import 'package:serviceorder/model/cliente.dart';
 import 'package:serviceorder/routes/rotas.dart';
 import 'package:serviceorder/view/tela_editar_cliente.dart';
+import 'package:serviceorder/view/tela_ver_cliente.dart';
 
 Future getClientes(String idUser) async {
   var conn = await MySqlDBConfiguration().connection;
@@ -17,29 +18,31 @@ Future getClientes(String idUser) async {
 }
 
 Future criaCliente(Cliente cliente, String idUsuario) async {
-  try {var conn = await MySqlDBConfiguration().connection;
-  await conn.connect();
-  await conn.execute("CALL Pc_CriaCliente("
-      "'$idUsuario', '${cliente.nome}', "
-      "'${cliente.telefonePrincipal}', '${cliente.telefoneSecundario}', '${cliente.email}', "
-      "'${cliente.endereco}', '${cliente.numEndereco}', '${cliente.bairro}', '${cliente.complemento}');");
-  await conn.close();
-  
-  return true;
+  try {
+    var conn = await MySqlDBConfiguration().connection;
+    await conn.connect();
+    await conn.execute("CALL Pc_CriaCliente("
+        "'$idUsuario', '${cliente.nome}', "
+        "'${cliente.telefonePrincipal}', '${cliente.telefoneSecundario}', '${cliente.email}', "
+        "'${cliente.endereco}', '${cliente.numEndereco}', '${cliente.bairro}', '${cliente.complemento}');");
+    await conn.close();
+
+    return true;
   } catch (err) {
     return false;
   }
 }
 
 Future atualizaCliente(Cliente cliente) async {
-  try {var conn = await MySqlDBConfiguration().connection;
-  await conn.connect();
-  await conn.execute("CALL Pc_AtualizaCliente("
-      "'${cliente.id}', '${cliente.nome}', "
-      "'${cliente.telefonePrincipal}', '${cliente.telefoneSecundario}', '${cliente.email}', "
-      "'${cliente.endereco}', '${cliente.numEndereco}', '${cliente.bairro}', '${cliente.complemento}');");
-  await conn.close();
-  return true;
+  try {
+    var conn = await MySqlDBConfiguration().connection;
+    await conn.connect();
+    await conn.execute("CALL Pc_AtualizaCliente("
+        "'${cliente.id}', '${cliente.nome}', "
+        "'${cliente.telefonePrincipal}', '${cliente.telefoneSecundario}', '${cliente.email}', "
+        "'${cliente.endereco}', '${cliente.numEndereco}', '${cliente.bairro}', '${cliente.complemento}');");
+    await conn.close();
+    return true;
   } catch (err) {
     return false;
   }
@@ -122,6 +125,15 @@ Widget buildClientes(List<Cliente> clientes) {
                   style: const TextStyle(fontWeight: FontWeight.w800),
                 ),
                 subtitle: Text(cliente.telefonePrincipal!),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          TelaVerCliente(idCliente: cliente.id!),
+                    ),
+                  );
+                },
               ),
             )
           ],

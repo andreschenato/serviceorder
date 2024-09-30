@@ -7,6 +7,7 @@ import 'package:serviceorder/model/ordens.dart';
 import 'package:serviceorder/routes/rotas.dart';
 import 'package:intl/intl.dart';
 import 'package:serviceorder/view/tela_editar_ordem.dart';
+import 'package:serviceorder/view/tela_ver_ordem.dart';
 
 Future getOrdens(String idUser) async {
   var conn = await MySqlDBConfiguration().connection;
@@ -58,13 +59,13 @@ Future<Ordens> getDadosOrdem(int idOrdem) async {
 
 Future atualizaOrdem(Ordens ordem) async {
   try {
-  var conn = await MySqlDBConfiguration().connection;
-  await conn.connect();
-  await conn.execute("CALL Pc_AtualizaOrdem("
-      "'${ordem.id}', '${ordem.clienteId}', '${ordem.descricao}', '${ordem.laudo}', '${ordem.status}', '${ordem.diaFinalizado}');");
-  await conn.close();
-  return true;
-  }catch (err) {
+    var conn = await MySqlDBConfiguration().connection;
+    await conn.connect();
+    await conn.execute("CALL Pc_AtualizaOrdem("
+        "'${ordem.id}', '${ordem.clienteId}', '${ordem.descricao}', '${ordem.laudo}', '${ordem.status}', '${ordem.diaFinalizado}');");
+    await conn.close();
+    return true;
+  } catch (err) {
     print(err);
     return false;
   }
@@ -122,12 +123,21 @@ Widget buildOrdens(List<Ordens> ordens) {
               child: ListTile(
                 tileColor: const Color.fromARGB(255, 219, 226, 240),
                 leading: Text(ordem.id!.toString(),
-                    style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 20)),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w800, fontSize: 20)),
                 title: Text(
                   ordem.nomeCliente!.toString(),
                   style: const TextStyle(fontWeight: FontWeight.w800),
                 ),
                 subtitle: Text(t.format(ordem.diaCriado!.toLocal()).toString()),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TelaVerOrdem(idOrdem: ordem.id!),
+                    ),
+                  );
+                },
               ),
             )
           ],
